@@ -29,7 +29,8 @@ for intent in data['intents']:
 
 words = [stemmer.stem(w.lower()) for w in words]
 words = sorted(list(set(words)))
-print(words)
+print(docs_x)
+print(docs_y)
 
 trainig = []
 output = []
@@ -40,3 +41,18 @@ for x, doc in enumerate(docs_x):
     bag = []
 
     wrds = [stemmer.stem(w) for w in doc]
+
+    for w in words:
+        if w in wrds:
+            bag.append(1)
+        else:
+            bag.append(0)
+
+    output_raw =out_empty[:]
+    output_raw[labels.index(docs_y[x])] = 1
+
+    trainig.append(bag)
+    output.append(output_raw)
+
+print(trainig)
+print(output)
