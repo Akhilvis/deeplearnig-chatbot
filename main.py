@@ -100,18 +100,22 @@ def chat():
     print("Start talking with the bot (type quit to stop)!")
     while True:
         inp = input("You: ")
+        print('0000000000000000000000000000000')
         if inp.lower() == "quit":
             break
 
-        results = model.predict([bag_of_words(inp, words)])
+        results = model.predict([bag_of_words(inp, words)])[0]
+        print('####################',results)
         results_index = numpy.argmax(results)
         tag = labels[results_index]
+        if results[results_index] > 0.5:
+            for tg in data["intents"]:
+                if tg['tag'] == tag:
+                    responses = tg['responses']
 
-        for tg in data["intents"]:
-            if tg['tag'] == tag:
-                responses = tg['responses']
-
-        print(random.choice(responses))
+            print(random.choice(responses))
+        else:
+            print('I dnt understand!')
 
 
 chat()
