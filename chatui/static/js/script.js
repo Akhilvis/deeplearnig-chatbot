@@ -20,16 +20,39 @@
         //edit this function to change what the chatbot says
         function chatbotResponse() {
           talking = true;
-          botMessage = "I'm confused"; //the default message
+//          botMessage = "I'm confused"; //the default message
 
-          if (lastUserMessage === 'hi' || lastUserMessage =='hello') {
-            const hi = ['hi','howdy','hello']
-            botMessage = hi[Math.floor(Math.random()*(hi.length))];;
-          }
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == XMLHttpRequest.DONE) {
+                    botMessage =  JSON.parse(xhttp.responseText)['response']
 
-          if (lastUserMessage === 'name') {
-            botMessage = 'My name is ' + botName;
-          }
+                    //add the chatbot's name and message to the array messages
+                    messages.push("<b>" + botName + ":</b> " + botMessage);
+                    //outputs the last few array elements of messages to html
+                    for (var i = 1; i < 8; i++) {
+                      if (messages[messages.length - i])
+                        document.getElementById("chatlog" + i).innerHTML = messages[messages.length - i];
+                    }
+
+
+                    // says the message using the text to speech function written below
+                    Speech(botMessage);
+                }
+}
+            xhttp.open("POST", "chat/");
+            xhttp.send(JSON.stringify({'query':lastUserMessage}));
+
+
+
+//          if (lastUserMessage === 'hi' || lastUserMessage =='hello') {
+//            const hi = ['hi','howdy','hello']
+//            botMessage = hi[Math.floor(Math.random()*(hi.length))];;
+//          }
+//
+//          if (lastUserMessage === 'name') {
+//            botMessage = 'My name is ' + botName;
+//          }
         }
         //****************************************************************
         //****************************************************************
@@ -55,15 +78,6 @@
             //Speech(lastUserMessage);  //says what the user typed outloud
             //sets the variable botMessage in response to lastUserMessage
             chatbotResponse();
-            //add the chatbot's name and message to the array messages
-            messages.push("<b>" + botName + ":</b> " + botMessage);
-            // says the message using the text to speech function written below
-            Speech(botMessage);
-            //outputs the last few array elements of messages to html
-            for (var i = 1; i < 8; i++) {
-              if (messages[messages.length - i])
-                document.getElementById("chatlog" + i).innerHTML = messages[messages.length - i];
-            }
           }
         }
 

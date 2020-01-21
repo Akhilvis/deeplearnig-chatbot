@@ -13,6 +13,7 @@ with open("intents.json") as file:
     data = json.load(file)
 
 try:
+    m
     with open("data.pickle", "rb") as f:
         words, labels, training, output = pickle.load(f)
 except:
@@ -76,6 +77,7 @@ net = tflearn.regression(net)
 model = tflearn.DNN(net)
 
 try:
+    jkk
     model.load("model.tflearn")
 except:
     model.fit(training, output, n_epoch=1000, batch_size=8, show_metric=True)

@@ -1,9 +1,12 @@
 from django.shortcuts import render
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http.response import JsonResponse
 
 import nltk
 from nltk.stem.lancaster import LancasterStemmer
-stemmer = LancasterStemmer()
 
+stemmer = LancasterStemmer()
 
 import numpy
 import tflearn
@@ -11,6 +14,7 @@ import tensorflow
 import random
 import json
 import pickle
+
 # Create your views here.
 
 model, labels, data = None, None, None
@@ -21,20 +25,29 @@ def home(request):
     return render(request, 'home.html')
 
 
+@csrf_exempt
 def reply_to_chat(request):
-    inp = request.POST['query']
+    print(7777, request.body)
+    responses = ['I do not understand!']
+    postdata = json.loads(request.body)
+    inp = postdata['query']
     results = model.predict([bag_of_words(inp, words)])[0]
     print('####################', results)
     results_index = numpy.argmax(results)
     tag = labels[results_index]
+    print('tag>>>>>>>>>>>>>>>>>.', tag)
     if results[results_index] > 0.2:
         for tg in data["intents"]:
+            print('tags....', tg['tag'])
             if tg['tag'] == tag:
                 responses = tg['responses']
 
         print(random.choice(responses))
+        return JsonResponse({'response': random.choice(responses)})
+
     else:
         print('I dnt understand!')
+        return JsonResponse({'response': responses})
 
 
 def bag_of_words(s, words):
@@ -53,12 +66,13 @@ def bag_of_words(s, words):
 
 def init_variables():
     global data
-    global words, labels, training, output , model
+    global words, labels, training, output
+    global model
 
-    with open("intents.json") as file:
+    with open(settings.BASE_DIR + "/static/data/intents.json") as file:
         data = json.load(file)
 
-    with open("data.pickle", "rb") as f:
+    with open(settings.BASE_DIR + "/.." + "/data.pickle", "rb") as f:
         words, labels, training, output = pickle.load(f)
 
     tensorflow.reset_default_graph()
@@ -71,4 +85,4 @@ def init_variables():
 
     model = tflearn.DNN(net)
 
-    model.load("model.tflearn")
+    model.load(settings.BASE_DIR + "/../" + "model.tflearn")

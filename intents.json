@@ -28,6 +28,13 @@
          "patterns": ["when are you guys open", "what are your hours", "hours of operation"],
          "responses": ["We are open 7am-4pm Monday-Friday!"],
          "context_set": ""
+        },
+
+        {"tag": "gadha",
+         "patterns": ["who is gadha", "who is gada"],
+         "responses": ["Ennennum kannettante"],
+         "context_set": ""
         }
+
    ]
 }
