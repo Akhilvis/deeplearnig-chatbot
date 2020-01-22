@@ -69,7 +69,7 @@ def init_variables():
     global words, labels, training, output
     global model
 
-    with open(settings.BASE_DIR + "/static/data/intents.json") as file:
+    with open(settings.BASE_DIR +"/../" +"intents.json") as file:
         data = json.load(file)
 
     with open(settings.BASE_DIR + "/.." + "/data.pickle", "rb") as f:

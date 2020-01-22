@@ -32,7 +32,7 @@
 
         {"tag": "gadha",
          "patterns": ["who is gadha", "who is gada"],
-         "responses": ["Ennennum kannettante"],
+         "responses": ["Ennennum kannettande  gaadha"],
          "context_set": ""
         }
 
